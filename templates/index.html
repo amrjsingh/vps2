@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Video Classes</title>
+    <style>
+        /* Your existing styles */
+        body {
+            font-family: 'Roboto', sans-serif; /* MD3 uses Roboto */
+            margin: 0;
+            padding: 0;
+            background-color: #F5F5F5; /* Light grey background */
+            color: #212121; /* MD3 text color */
+        }
+        .container {
+            padding: 1em;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2em; /* Larger text for readability */
+            margin-bottom: 0.5em;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 1em; /* Add space between buttons */
+        }
+        a {
+            display: inline-block;
+            font-size: 1.2em; /* Larger font size for touch targets */
+            text-decoration: none;
+            background-color: #6200EA; /* MD3 purple 700 */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px; /* Slightly rounded corners for MD feel */
+            box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),
+                        0px 2px 2px 0px rgba(0,0,0,0.14),
+                        0px 1px 5px 0px rgba(0,0,0,0.12); /* MD3 elevation */
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        a:active {
+            box-shadow: none; /* Simulate button press when active */
+        }
+        /* Styles for the 'Ask Doubt' section */
+        .ask-doubt, .record-audio {
+            margin-top: 20px;
+        }
+        .camera-icon-label, .record-btn {
+            display: inline-block;
+            margin: 5px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #6200EA; /* MD3 purple 700 */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .camera-icon-label:active, .record-btn:active {
+            box-shadow: none;
+        }
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        /* Additional styles for audio recording */
+        .record-btn {
+            background-color: #FF5252; /* Red accent for recording */
+        }
+        .record-btn[disabled] {
+            background-color: #E0E0E0;
+            color: #9E9E9E;
+            cursor: default;
+        }
+        /* Placeholder style for spectrogram */
+        .spectrogram-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            line-height: 200px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to the Video Classes</h1>
+    <ul>
+        <li><a href="{{ url_for('class56') }}" class="md-button">Class 5-6</a></li>
+        <li><a href="{{ url_for('class78') }}" class="md-button">Class 7-8</a></li>
+        <li><a href="{{ url_for('class910') }}" class="md-button">Class 9-10</a></li>
+    </ul>
+
+    <!-- Ask Doubt Section -->
+    <div class="ask-doubt">
+        <h2>Ask a Doubt</h2>
+        <form id="doubt-form" action="/send_doubt" method="post" enctype="multipart/form-data">
+            <label for="doubt-file-input" class="camera-icon-label icon-button">
+                <i class="fas fa-camera"></i>
+            </label>
+            <input id="doubt-file-input" type="file" name="doubt_photo" accept="image/*" capture="environment" style="display:none;" onchange="submitDoubtForm()">
+        </form>
+    </div>
+
+    <!-- Record Audio Section -->
+    <div class="record-audio">
+        <h2>Record Audio</h2>
+        <button class="record-btn icon-button" onclick="startRecording()">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <button class="record-btn icon-button" onclick="stopRecording()" disabled>
+            <i class="fas fa-stop-circle"></i>
+        </button>
+        <audio id="audioPlayer" controls></audio>
+        <div class="spectrogram-placeholder">
+            Spectrogram will appear here
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+    function startRecording() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+
+                audioChunks = [];
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                });
+
+                mediaRecorder.addEventListener("stop", () => {
+                    const audioBlob = new Blob(audioChunks);
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioPlayer').src = audioUrl;
+                    // Here you can add code to generate a spectrogram from the audioBlob
+                    // For now, it's just a placeholder
+                });
+
+                document.querySelector('.fa-microphone').parentElement.disabled = true;
+                document.querySelector('.fa-stop-circle').parentElement.disabled = false;
+            });
+    }
+
+    function stopRecording() {
+        mediaRecorder.stop();
+        document.querySelector('.fa-microphone').parentElement.disabled = false;
+        document.querySelector('.fa-stop-circle').parentElement.disabled = true;
+    }
+
+    function submitDoubtForm() {
+        document.getElementById('doubt-form').submit();
+    }
+</script>
+
+</body>
+</html>

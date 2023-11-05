@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Documents List</title>
+</head>
+<body>
+    <ul>
+        {% for doc in documents %}
+            <li>
+                Title: {{ doc['title'] }} - Video ID: {{ doc['vdo_id'] }} - Description: {{ doc['des'] }}
+                <a href="{{ url_for('delete_video', collection_name=collection_name, video_id=doc['_id']) }}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('admin_create') }}">Go back to Create Document</a>
+</body>
+</html>

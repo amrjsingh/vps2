@@ -1,0 +1,73 @@
+<!-- templates/class_videos.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F5F5F5;
+            color: #212121;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        h2 {
+            font-size: 2em;
+            color: #6200EA;
+            margin-bottom: 0.5em;
+        }
+        .video-card {
+            background-color: #FFFFFF;
+            margin-bottom: 1em;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .video-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 0.25em;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 0.5em;
+        }
+        a {
+            display: inline-block;
+            background-color: #6200EA;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 1em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        a:active {
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>{{ title }}</h2>
+    {% for video in videos %}
+        <div class="video-card">
+            <h3>{{ video.title }}</h3>
+            <p>{{ video.des }}</p>
+            <a href="https://www.youtube.com/watch?v={{ video.vdo_id }}" target="_blank">Watch Video</a>
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

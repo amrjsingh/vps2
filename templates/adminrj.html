@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin RJ Dashboard</title>
+    <!-- Bootstrap for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- jQuery for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Admin Dashboard</h1>
+        <select id="collectionSelect" onchange="loadCollection()">
+            <option value="">Select Collection</option>
+            <option value="class56">Class 5-6</option>
+            <option value="class78">Class 7-8</option>
+            <option value="class910">Class 9-10</option>
+        </select>
+        <div id="videoList"></div>
+    </div>
+
+    <script>
+        function loadCollection() {
+            const collectionName = $('#collectionSelect').val();
+            if (collectionName) {
+                $.ajax({
+                    url: `/get_collection/${collectionName}`,
+                    type: 'GET',
+                    success: function(documents) {
+                        let html = '<ul class="list-group">';
+                        documents.forEach(doc => {
+                            html += `
+                                <li class="list-group-item">
+                                    Title: ${doc.title}, Video ID: ${doc.vdo_id}, Description: ${doc.des}
+                                    <button onclick="deleteVideo('${doc._id}', '${collectionName}')">Delete</button>
+                                    <button onclick="editVideo('${doc._id}', '${collectionName}')">Edit</button>
+                                </li>`;
+                        });
+                        html += '</ul>';
+                        html += `
+                            <h3>${collectionName.toUpperCase()} - Add New Video</h3>
+                            <form id="videoForm">
+                                <input type="hidden" id="videoId" name="_id" value="">
+                                <input type="text" id="title" name="title" placeholder="Title" required>
+                                <input type="text" id="vdo_id" name="vdo_id" placeholder="Video ID" required>
+                                <textarea id="des" name="des" placeholder="Description" required></textarea>
+                                <button type="submit">Submit</button>
+                            </form>`;
+                        $('#videoList').html(html);
+                        $('#videoForm').on('submit', function(e) {
+                            e.preventDefault();
+                            submitVideoForm(collectionName);
+                        });
+                    }
+                });
+            } else {
+                $('#videoList').empty();
+            }
+        }
+
+        <!-- Add this script tag inside the body of adminrj.html -->
+<!-- Within the success function of the loadCollection method -->
+documents.forEach(function(doc) {
+    html += `
+        <li class="list-group-item" id="video_${doc._id}" data-title="${doc.title}" data-vdo_id="${doc.vdo_id}" data-des="${doc.des}">
+            Title: ${doc.title}, Video ID: ${doc.vdo_id}, Description: ${doc.des}
+            <button onclick="deleteVideo('${doc._id}', '${collectionName}')">Delete</button>
+            <button onclick="editVideo('${doc._id}', '${collectionName}')">Edit</button>
+        </li>`;
+});
+
+<script>
+// ... existing JavaScript functions ...
+
+function deleteVideo(videoId, collectionName) {
+    $.ajax({
+        url: `/delete_video/${collectionName}/${videoId}`,
+        type: 'DELETE',  // Change to 'DELETE' request
+        success: function(response) {
+            alert('Video deleted!');
+            loadCollection();  // Reload the list
+        }
+    });
+}
+
+function editVideo(videoId, collectionName) {
+    // Fill the form with the video's existing data for editing
+    const video = document.querySelector(`#video_${videoId}`);
+    const title = video.getAttribute('data-title');
+    const vdo_id = video.getAttribute('data-vdo_id');
+    const des = video.getAttribute('data-des');
+
+    // Populate the form fields
+    $('#videoId').val(videoId);
+    $('#title').val(title);
+    $('#vdo_id').val(vdo_id);
+    $('#des').val(des);
+}
+
+function submitVideoForm(collectionName) {
+    const videoData = {
+        _id: $('#videoId').val(), // Will be empty for new video
+        title: $('#title').val(),
+        vdo_id: $('#vdo_id').val(),
+        des: $('#des').val()
+    };
+
+    // Determine if this is an edit or add based on if _id is present
+    const url = videoData._id ?
+        `/edit_video/${collectionName}` :
+        `/add_video/${collectionName}`;
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(videoData),
+        success: function(response) {
+            alert('Video saved!');
+            loadCollection();  // Reload the list
+        }
+    });
+}
+
+// ... rest of JavaScript code ...
+</script>
+
+    </script>
+</body>
+</html>
