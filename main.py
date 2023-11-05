@@ -45,7 +45,7 @@ def class910():
 
 TELEGRAM_BOT_TOKEN = '6989557622:AAHqd788YAvgUqwqsMpes8l60Tg_P1jRXcs'
 TELEGRAM_CHAT_ID = '1454652240'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif','JPEG','JPG','PNG'}
 
 def allowed_file(filename):
     return '.' in filename and \
