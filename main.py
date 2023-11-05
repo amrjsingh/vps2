@@ -136,4 +136,4 @@ def delete_video(collection_name, video_id):
 
 # Run Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
