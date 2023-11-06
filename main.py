@@ -95,7 +95,7 @@ def send_doubt():
         return redirect(url_for('index'))
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file_path = os.path.join('tmp', filename)  # Use os.path.join for OS-independent paths
+        file_path = os.path.join('static', filename)  # Use os.path.join for OS-independent paths
         file.save(file_path)
         print(file_path)
         send_photo_telegram(file_path)
