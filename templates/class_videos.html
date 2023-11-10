@@ -64,7 +64,7 @@
         <div class="video-card">
             <h3>{{ video.title }}</h3>
             <p>{{ video.des }}</p>
-            <a href="https://www.youtube.com/watch?v={{ video.vdo_id }}" target="_blank">Watch Video</a>
+            <a href="{{ video.vdo_id }}" target="_blank">Watch Video</a>
         </div>
     {% endfor %}
 </div>
