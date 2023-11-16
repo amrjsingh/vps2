@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file
 from pymongo import MongoClient
 # from flask import Flask, render_template, request, jsonify
 from flask_pymongo import PyMongo
@@ -35,7 +35,10 @@ def class78():
     # Fetch video documents from the class78 collection
     videos = db.class78.find()
     return render_template('class_videos.html', videos=videos, title="Class 7-8 Videos")
-
+@app.route('/download')
+def download_file():
+    file_path = 'static/10th_Homework.pdf'
+    return send_file(file_path, as_attachment=True)
 
 @app.route('/class910')
 def class910():
